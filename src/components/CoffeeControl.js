@@ -63,15 +63,17 @@ class CoffeeControl extends React.Component{
   }
 
   
-  
   handleCoffeeSold = (id) => {
-    const updatedCoffeeList = this.state.mainCoffeeList.map(coffee => {
+    const updatedCoffeeList = this.state.mainCoffeeList.map((coffee) => {
       if (coffee.id === id) {
+        if (coffee.weight === 0) {
+          return coffee;
+        }
         return { ...coffee, weight: coffee.weight - 1 };
       }
       return coffee;
     });
-    
+  
     this.setState({
       stateName: 'list',
       mainCoffeeList: updatedCoffeeList,
