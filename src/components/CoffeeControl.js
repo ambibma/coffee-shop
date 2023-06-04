@@ -4,6 +4,7 @@ import React from "react";
 import CoffeeList from "./CoffeeList";
 import NewCoffeeForm from "./NewCoffeeForm";
 import CoffeeDetail from "./CoffeeDetail";
+import EditCoffeeForm from "./EditCoffeeForm";
 
 class CoffeeControl extends React.Component{
   constructor(props){
@@ -11,7 +12,8 @@ class CoffeeControl extends React.Component{
     this.state={
       stateName: "list",
       mainCoffeeList: [],
-      selectedCoffee: null
+      selectedCoffee: null,
+    
     };
   }
 
@@ -55,7 +57,13 @@ class CoffeeControl extends React.Component{
     this.handleClick()
   };
 
+  handleEditClick = () => {
+    console.log("handleEditClick reached!");
+    this.setState({stateName:"editing"});
+  }
 
+  
+  
   handleCoffeeSold = (id) => {
     const updatedCoffeeList = this.state.mainCoffeeList.map(coffee => {
       if (coffee.id === id) {
@@ -63,28 +71,45 @@ class CoffeeControl extends React.Component{
       }
       return coffee;
     });
-  
+    
     this.setState({
       stateName: 'list',
       mainCoffeeList: updatedCoffeeList,
       selectedCoffee: null
-
+      
     });
   };
 
-
+  handleEditingCoffeeInListToBeClicked = (coffeeToEdit) => {
+    const editedMainCoffeeList = this.state.mainCoffeeList
+    .filter(coffee => coffee.id !== this.state.selectedCoffee.id)
+    .concat(coffeeToEdit);
+    this.setState({
+      mainCoffeeList: editedMainCoffeeList,
+      stateName: "list"
+    });
+  }
+  
+  
   render(){
     let currentlyVisibleState=null;
     let buttonText=null;
 
     switch(this.state.stateName){
+      case "editing":
+        currentlyVisibleState =<EditCoffeeForm
+        coffee={this.state.selectedCoffee}
+        onClickingEdit = {this.handleEditingCoffeeInListToBeClicked}/>
+        buttonText="Return To Coffee List"
+        break;
 
       case 'coffeeDetails':
-      currentlyVisibleState = <CoffeeDetail
-      coffee={this.state.selectedCoffee}
-      onCoffeeSold = {this.handleCoffeeSold} />
-      // onClickingEdit = {this.handleEditClick} />
-      buttonText= 'Return to Coffee List';
+        currentlyVisibleState = <CoffeeDetail
+        coffee={this.state.selectedCoffee}
+        onClickingEdit = {this.handleEditClick}
+        onCoffeeSold = {this.handleCoffeeSold} 
+        />
+        buttonText= 'Return to Coffee List';
       break;
 
       case 'form':
