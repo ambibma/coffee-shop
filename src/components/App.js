@@ -9,7 +9,7 @@ function App(){
   return(
     <>
       <Header />
-      {/* <CoffeeControl /> */}
+      <CoffeeControl />
 {/* this is a jsx comment */}
       <hr/>
       </>
