@@ -3,18 +3,16 @@ import PropTypes from "prop-types";
 import { v4 } from 'uuid';
 
 function Coffee(props){
-  const [weight, setWeight] = useState(props.weight);
-  const handleCoffeeSold = () => {
-    setWeight(prevWeight => prevWeight -1);
-  }
+
   return(
     <>
-    <div onClick = {() => props.whenTicketClicked(props.id)}></div>
+    <div onClick = {() => props.whenCoffeeClicked(props.id)}>
     <h3>{props.name} - {props.roast} </h3>
     <p><em>{props.origin}</em></p>
-    <p>{props.price}</p>
-    <p>{weight}lb</p>
-    <button onClick = {handleCoffeeSold}> Sell </button>
+    {/* <p>{props.price}</p> */}
+    <p>{props.weight}lb</p>
+    </div>
+    {/* <button onClick = {()=> handleCoffeeSold(props.id)}> Sell </button> */}
     </>
   );
 }
@@ -25,9 +23,11 @@ Coffee.propTypes = {
   origin: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   id: PropTypes.string,
-  weight: PropTypes.number
+  weight: PropTypes.number,
+  whenCoffeeClicked: PropTypes.func
+  // handleCoffeeSold: PropTypes.func
 }
-Coffee.defaultProps = {
-  weight: 130
-}
+// Coffee.defaultProps = {
+//   weight: 130
+// }
 export default Coffee;

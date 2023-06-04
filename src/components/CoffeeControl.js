@@ -3,6 +3,7 @@ import { render } from "@testing-library/react";
 import React from "react";
 import CoffeeList from "./CoffeeList";
 import NewCoffeeForm from "./NewCoffeeForm";
+import CoffeeDetail from "./CoffeeDetail";
 
 class CoffeeControl extends React.Component{
   constructor(props){
@@ -10,14 +11,19 @@ class CoffeeControl extends React.Component{
     this.state={
       stateName: "list",
       mainCoffeeList: [],
-      //selectedCoffee: null
+      selectedCoffee: null
     };
   }
 
   handleClick = () => {
     let nextState=null;
+    let nextSelectedCoffee = this.state.selectedCoffee;
 
     switch(this.state.stateName){
+      case 'coffeeDetail':
+        nextState = "list"
+        nextSelectedCoffee = null;
+        break;
       case "form":
         nextState= 'list';
         break;
@@ -29,11 +35,18 @@ class CoffeeControl extends React.Component{
         break;
     }
     this.setState(prevState => ({
-      stateName:nextState
-      //selectedTicket: nextSelectedTicket
+      stateName:nextState,
+      selectedCoffee: nextSelectedCoffee
     }))
   };
   
+  handleChangingSelectedCoffee = (id) => {
+    const selectedCoffee = this.state.mainCoffeeList.filter(coffee => coffee.id ===id)[0];
+    this.setState({
+      selectedCoffee: selectedCoffee,
+      stateName: "coffeeDetails"
+    });
+  }
   handleAddingNewCoffeeToList = (newCoffee) => {
     const newMainCoffeeList = this.state.mainCoffeeList.concat(newCoffee);
     this.setState(prevState => ({
@@ -43,11 +56,28 @@ class CoffeeControl extends React.Component{
   };
 
 
+  // handleCoffeeSold = (id) => {
+  //   const newMainCoffeeList = this.state.mainCoffeeList.map(coffee => {
+  //     if (coffee.id === id) {
+  //       return { ...coffee, weight: coffee.weight - 1 };
+  //     }
+  //     return coffee;
+  //   });
+  // }
+
+
   render(){
     let currentlyVisibleState=null;
     let buttonText=null;
 
     switch(this.state.stateName){
+
+      case 'coffeeDetails':
+      currentlyVisibleState = <CoffeeDetail
+      coffee={this.state.selectedCoffee} />
+      // onClickingEdit = {this.handleEditClick} />
+      buttonText= 'Return to Coffee List';
+      break;
 
       case 'form':
         currentlyVisibleState = <NewCoffeeForm
@@ -58,14 +88,16 @@ class CoffeeControl extends React.Component{
       case 'list':
         currentlyVisibleState =<CoffeeList
         coffeeList={this.state.mainCoffeeList}
-        // onCoffeeSelection={this.handleChangingSelectedCoffee}
+        onCoffeeSelection={this.handleChangingSelectedCoffee}
+        // onCoffeeSold={this.handleCoffeeSold}
         />
         buttonText="Add New Coffee";
         break;
       default:
         currentlyVisibleState = <CoffeeList 
         coffeeControl={this.state.mainCoffeeList}
-        // onCoffeeSelection={this.handleChangingSelectedCoffee}
+        // onCoffeeSold={this.handleCoffeeSold}
+        onCoffeeSelection={this.handleChangingSelectedCoffee}
         />
         buttonText = "Add New Coffee";
         break;

@@ -16,6 +16,7 @@ function NewCoffeeForm(props){
         origin: e.target.origin.value,
         roast: e.target.roast.value,
         price: e.target.price.value,
+        weight: e.target.weight = 130,
       
 
         id: v4()
